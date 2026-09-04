@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Her kontrolü ve kanıtını inceleyebilir ve çalışma alanınız adına bunları gözden geçirebilirsiniz.",
   "acceptance.sharedNotice.title": "Sizinle paylaşıldı",
   "acceptance.sharedNotice.titleWithName": "{{name}} tarafından paylaşıldı",
+  "acceptance.shell.back": "Geri",
+  "acceptance.shell.menu": "Teslimatları göster",
   "acceptance.stats.failed": "{{count}} başarısız",
   "acceptance.stats.notExecuted": "{{count}} çalıştırılmadı",
   "acceptance.stats.passed": "{{count}} geçti",

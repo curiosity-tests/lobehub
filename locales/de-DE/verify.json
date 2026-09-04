@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Sie können alle Prüfungen und deren Nachweise durchsuchen und sie im Namen Ihres Arbeitsbereichs überprüfen.",
   "acceptance.sharedNotice.title": "Mit Ihnen geteilt",
   "acceptance.sharedNotice.titleWithName": "Geteilt von {{name}}",
+  "acceptance.shell.back": "Zurück",
+  "acceptance.shell.menu": "Lieferungen anzeigen",
   "acceptance.stats.failed": "{{count}} fehlgeschlagen",
   "acceptance.stats.notExecuted": "{{count}} nicht ausgeführt",
   "acceptance.stats.passed": "{{count}} bestanden",

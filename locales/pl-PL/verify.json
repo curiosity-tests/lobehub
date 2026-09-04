@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Możesz przeglądać wszystkie kontrole i ich dowody oraz je oceniać w imieniu swojego miejsca pracy.",
   "acceptance.sharedNotice.title": "Udostępnione Tobie",
   "acceptance.sharedNotice.titleWithName": "Udostępnione przez {{name}}",
+  "acceptance.shell.back": "Wstecz",
+  "acceptance.shell.menu": "Pokaż dostawy",
   "acceptance.stats.failed": "{{count}} niepowodzenie(a)",
   "acceptance.stats.notExecuted": "{{count}} nie wykonano",
   "acceptance.stats.passed": "{{count}} zaliczone",

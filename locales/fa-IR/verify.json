@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "شما می‌توانید هر بررسی و شواهد آن را مرور کنید و به نمایندگی از فضای کاری خود آنها را بررسی کنید.",
   "acceptance.sharedNotice.title": "با شما به اشتراک گذاشته شده",
   "acceptance.sharedNotice.titleWithName": "به اشتراک گذاشته شده توسط {{name}}",
+  "acceptance.shell.back": "بازگشت",
+  "acceptance.shell.menu": "نمایش تحویل‌ها",
   "acceptance.stats.failed": "{{count}} شکست خورده",
   "acceptance.stats.notExecuted": "{{count}} اجرا نشده",
   "acceptance.stats.passed": "{{count}} گذرانده شده",

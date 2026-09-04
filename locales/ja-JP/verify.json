@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "すべてのチェックとその証拠を閲覧し、ワークスペースを代表してレビューすることができます。",
   "acceptance.sharedNotice.title": "共有されています",
   "acceptance.sharedNotice.titleWithName": "{{name}}から共有されています",
+  "acceptance.shell.back": "戻る",
+  "acceptance.shell.menu": "配達を表示",
   "acceptance.stats.failed": "{{count}} 件失敗",
   "acceptance.stats.notExecuted": "{{count}} 件未実行",
   "acceptance.stats.passed": "{{count}} 件合格",

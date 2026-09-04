@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Puedes explorar cada verificación y su evidencia, y revisarlas en nombre de tu espacio de trabajo.",
   "acceptance.sharedNotice.title": "Compartido contigo",
   "acceptance.sharedNotice.titleWithName": "Compartido por {{name}}",
+  "acceptance.shell.back": "Atrás",
+  "acceptance.shell.menu": "Mostrar entregas",
   "acceptance.stats.failed": "{{count}} fallaron",
   "acceptance.stats.notExecuted": "{{count}} no ejecutados",
   "acceptance.stats.passed": "{{count}} aprobados",

@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Puoi visualizzare ogni controllo e le relative prove, e rivederli per conto del tuo spazio di lavoro.",
   "acceptance.sharedNotice.title": "Condiviso con te",
   "acceptance.sharedNotice.titleWithName": "Condiviso da {{name}}",
+  "acceptance.shell.back": "Indietro",
+  "acceptance.shell.menu": "Mostra consegne",
   "acceptance.stats.failed": "{{count}} falliti",
   "acceptance.stats.notExecuted": "{{count}} non eseguiti",
   "acceptance.stats.passed": "{{count}} superati",

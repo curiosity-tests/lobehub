@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Вы можете просмотреть все проверки и их доказательства, а также оценить их от имени вашего рабочего пространства.",
   "acceptance.sharedNotice.title": "Поделились с вами",
   "acceptance.sharedNotice.titleWithName": "Поделился {{name}}",
+  "acceptance.shell.back": "Назад",
+  "acceptance.shell.menu": "Показать доставки",
   "acceptance.stats.failed": "{{count}} неудач",
   "acceptance.stats.notExecuted": "{{count}} не выполнено",
   "acceptance.stats.passed": "{{count}} пройдено",

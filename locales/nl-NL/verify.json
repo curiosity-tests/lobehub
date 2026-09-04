@@ -207,6 +207,8 @@
   "acceptance.sharedNotice.reviewableDescription": "Je kunt alle controles en het bewijs bekijken en ze namens je werkruimte beoordelen.",
   "acceptance.sharedNotice.title": "Gedeeld met jou",
   "acceptance.sharedNotice.titleWithName": "Gedeeld door {{name}}",
+  "acceptance.shell.back": "Terug",
+  "acceptance.shell.menu": "Toon leveringen",
   "acceptance.stats.failed": "{{count}} mislukt",
   "acceptance.stats.notExecuted": "{{count}} niet uitgevoerd",
   "acceptance.stats.passed": "{{count}} geslaagd",
