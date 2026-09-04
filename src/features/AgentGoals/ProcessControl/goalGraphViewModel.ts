@@ -22,6 +22,14 @@ import type {
 /** Mirrors the reclaim window the coordinator uses when a Task holds no lease. */
 const DEFAULT_LEASE_TIMEOUT_MS = 15 * 60 * 1000;
 
+/**
+ * How long a delivered task may wait on its verification before the wait itself
+ * looks wrong. Mirrors the coordinator's `VERIFY_SETTLE_GRACE_MS`: it holds off
+ * re-dispatching a delivered node for exactly this long, so the UI calling the
+ * node lost any earlier would contradict the system that owns the decision.
+ */
+const VERIFY_SETTLE_GRACE_MS = 60 * 60 * 1000;
+
 /** How many just-finished tasks stay visible so the list fades instead of items vanishing. */
 export const RECENT_DONE = 2;
 
@@ -85,6 +93,12 @@ export interface GoalNodeView {
   humanTouches: GoalGraphDecision[];
   /** Active for longer than the lease window with no heartbeat — the coordinator would reclaim it. */
   isStale: boolean;
+  /**
+   * Delivered and waiting on its verification. Not idle and not lost: the
+   * verify run is a full agent run of its own, and the coordinator deliberately
+   * leaves the node alone while it settles.
+   */
+  isVerifying: boolean;
   node: GoalGraphNode;
   /** The Task that produced this finding. */
   producedBy?: GoalGraphNode;
@@ -94,7 +108,7 @@ export interface GoalNodeView {
   startedAt?: Date;
 }
 
-export type FrontierItemKind = 'gate' | 'stale' | 'running' | 'ready' | 'done';
+export type FrontierItemKind = 'gate' | 'stale' | 'verifying' | 'running' | 'ready' | 'done';
 
 export interface FrontierItem {
   key: string;
@@ -211,7 +225,8 @@ export const buildGoalGraphView = (
   snapshot: GoalGraphSnapshot,
   now: number = Date.now(),
 ): GoalGraphView => {
-  const { decisions, edges, events, goal, nodes, runHeartbeats, workVersions } = snapshot;
+  const { decisions, deliveredAt, edges, events, goal, nodes, runHeartbeats, workVersions } =
+    snapshot;
   const nodeById = new Map(nodes.map((node) => [node.id, node]));
   const lease = leaseTimeoutMs(goal);
 
@@ -282,6 +297,17 @@ export const buildGoalGraphView = (
     const heartbeatAt = new Date(
       Math.max(node.updatedAt.getTime(), runHeartbeats?.[node.id]?.getTime() ?? 0),
     );
+    // A delivered run contributes no heartbeat — its topic is `completed`, not
+    // running — so liveness alone would call the verification window lost. That
+    // window is where the goal is most informative, and it lasted up to an hour
+    // showing a failure-coloured "lost" badge.
+    const delivered = deliveredAt?.[node.id];
+    const isVerifying =
+      node.kind === 'task' &&
+      node.status === 'active' &&
+      !!delivered &&
+      now - delivered.getTime() <= VERIFY_SETTLE_GRACE_MS;
+
     return {
       answers: supportsByFinding.get(node.id) ?? [],
       artifacts: artifactsByNode.get(node.id) ?? [],
@@ -295,8 +321,14 @@ export const buildGoalGraphView = (
       gateSubjectId: gateSubject.get(node.id),
       heartbeatAt,
       humanTouches: nodeDecisions.filter((d) => d.status === 'resolved' && !!d.resolvedByUserId),
+      // Past the grace window the coordinator itself gives up on the verify run,
+      // so a delivery still unsettled by then really is stuck.
       isStale:
-        node.kind === 'task' && node.status === 'active' && now - heartbeatAt.getTime() > lease,
+        node.kind === 'task' &&
+        node.status === 'active' &&
+        !isVerifying &&
+        now - heartbeatAt.getTime() > lease,
+      isVerifying,
       node,
       producedBy: producedByFinding.get(node.id),
       seq: node.kind === 'task' ? ++seq : undefined,
@@ -317,9 +349,11 @@ export const buildGoalGraphView = (
     }
     if (node.kind !== 'task') continue;
     if (node.status === 'active') {
+      // Verifying ranks with running, not with stale: nothing is wrong and
+      // nothing is waiting on the reader.
       frontier.push({
         key: node.id,
-        kind: view.isStale ? 'stale' : 'running',
+        kind: view.isStale ? 'stale' : view.isVerifying ? 'verifying' : 'running',
         rank: view.isStale ? 0 : 1,
         view,
       });

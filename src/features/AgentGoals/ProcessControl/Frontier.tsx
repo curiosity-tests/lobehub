@@ -309,15 +309,19 @@ const FrontierRow = memo<{
   // Gate rows carry no tag: the expanded card with its action buttons already
   // says "this needs you", and a warning chip next to it is noise.
   const tag =
-    item.kind === 'stale'
-      ? { color: 'error', text: t('goalProcess.tag.lost') }
-      : item.kind === 'done'
-        ? {
-            color: undefined,
-            text:
-              node.status === 'resolved' ? t('goalProcess.tag.done') : t('goalProcess.tag.retired'),
-          }
-        : null;
+    item.kind === 'verifying'
+      ? { color: 'info', text: t('goalProcess.tag.verifying') }
+      : item.kind === 'stale'
+        ? { color: 'error', text: t('goalProcess.tag.lost') }
+        : item.kind === 'done'
+          ? {
+              color: undefined,
+              text:
+                node.status === 'resolved'
+                  ? t('goalProcess.tag.done')
+                  : t('goalProcess.tag.retired'),
+            }
+          : null;
 
   const stop = (event: React.MouseEvent) => event.stopPropagation();
 

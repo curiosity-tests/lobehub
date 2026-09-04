@@ -647,6 +647,7 @@
   "goalProcess.tag.lost": "Lost",
   "goalProcess.tag.needsDecision": "Needs your decision",
   "goalProcess.tag.retired": "Retired",
+  "goalProcess.tag.verifying": "Verifying",
   "goalTask.checks": "{{passed}}/{{total}} checks passed",
   "goalTask.round": "Round {{current}}",
   "goalTask.roundWithBudget": "Round {{current}}/{{total}}",

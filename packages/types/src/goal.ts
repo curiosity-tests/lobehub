@@ -251,6 +251,13 @@ export interface GoalGraphWorkVersionDisplay {
 
 export interface GoalGraphSnapshot {
   decisions: GoalGraphDecision[];
+  /**
+   * When an active task node's newest run delivered, present only while that
+   * node is waiting on verification to settle. A verify-bound task holds its
+   * node `active` with an already-`completed` topic, which contributes no
+   * heartbeat — without this the client reads the wait as lost.
+   */
+  deliveredAt?: Record<string, Date>;
   edges: GoalGraphEdge[];
   events: GoalGraphEvent[];
   goal: GoalItem;

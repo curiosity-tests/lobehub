@@ -1878,6 +1878,7 @@ export default {
   'goalProcess.planning.description':
     'The coordinator is breaking the goal into executable tasks — they will appear here shortly.',
   'goalProcess.tag.needsDecision': 'Needs your decision',
+  'goalProcess.tag.verifying': 'Verifying',
   'goalProcess.tag.lost': 'Lost',
   'goalProcess.tag.done': 'Done',
   'goalProcess.tag.retired': 'Retired',

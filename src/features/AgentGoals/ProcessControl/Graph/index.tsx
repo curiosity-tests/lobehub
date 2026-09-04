@@ -369,9 +369,10 @@ const Canvas = memo<
               // Not started and still blocked — it is context, not the story.
               dim: item.node.status === 'proposed' && item.blockers.length > 0,
               isGate,
-              running: item.node.status === 'active' && !item.isStale,
+              running: item.node.status === 'active' && !item.isStale && !item.isVerifying,
               selected: selectedId === item.node.id,
               stale: item.isStale,
+              verifying: item.isVerifying,
               subtitle: subtitleOf(item),
               view: item,
             };

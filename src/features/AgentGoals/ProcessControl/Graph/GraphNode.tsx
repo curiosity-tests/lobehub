@@ -3,7 +3,7 @@
 import { Flexbox, Icon, Tooltip } from '@lobehub/ui';
 import { Handle, type NodeProps, Position } from '@xyflow/react';
 import { createStaticStyles, cssVar, cx } from 'antd-style';
-import { FileBox, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
+import { FileBox, Loader2, type LucideIcon, Repeat2, ShieldCheck } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -30,6 +30,7 @@ export interface GraphNodeData extends Record<string, unknown> {
   selected: boolean;
   stale: boolean;
   subtitle: string;
+  verifying: boolean;
   view: GoalNodeView;
 }
 
@@ -185,12 +186,14 @@ interface StateChip {
   color: string;
   /** The task family's status glyph; running renders the animated ring instead. */
   icon?: LucideIcon;
+  /** Spin the glyph, for a state that is actively progressing. */
+  spin?: boolean;
   text: string;
 }
 
 const useStateChip = (data: GraphNodeData): StateChip | null => {
   const { t } = useTranslation('chat');
-  const { isGate, running, stale, view } = data;
+  const { isGate, running, stale, verifying, view } = data;
   const { node } = view;
 
   if (isGate)
@@ -198,6 +201,17 @@ const useStateChip = (data: GraphNodeData): StateChip | null => {
       color: TASK_STATUS_VISUALS.paused.color,
       icon: TASK_STATUS_VISUALS.paused.icon,
       text: t('goalProcess.tag.needsDecision'),
+    };
+  // Delivered and being judged — the most informative moment of a run, and for
+  // up to an hour it used to render as the failure-coloured "lost" chip because
+  // a completed topic contributes no heartbeat. Matches `RunVerifyTag`'s own
+  // running visual so verification reads the same wherever it appears.
+  if (verifying)
+    return {
+      color: cssVar.colorInfo,
+      icon: Loader2,
+      spin: true,
+      text: t('goalProcess.tag.verifying'),
     };
   if (stale)
     return {
@@ -287,7 +301,7 @@ const GraphNodeView = memo<NodeProps>(({ data }) => {
             {chip && (
               <Flexbox horizontal align={'center'} gap={5}>
                 {chip.icon ? (
-                  <Icon color={chip.color} icon={chip.icon} size={13} />
+                  <Icon color={chip.color} icon={chip.icon} size={13} spin={chip.spin} />
                 ) : (
                   <RunningGlyph size={13} />
                 )}

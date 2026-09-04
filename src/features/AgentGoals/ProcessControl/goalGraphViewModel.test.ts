@@ -170,6 +170,42 @@ describe('buildGoalGraphView', () => {
     expect(view.needsYou).toBe(1);
   });
 
+  it('reads a delivered task as verifying, not lost, while the judgment settles', () => {
+    // A verify-bound task keeps its node `active` with an already-`completed`
+    // topic, so it contributes no heartbeat and the node row goes quiet. The
+    // coordinator deliberately leaves it alone for a full hour; the UI used to
+    // spend that hour showing a failure-coloured "lost" badge over the most
+    // informative moment of the run.
+    const view = buildGoalGraphView(
+      snapshot({
+        deliveredAt: { w1: at(90) },
+        events: [event('w1', 'activated', 30)],
+        nodes: [node('w1', { status: 'active', taskId: 'task-1', updatedAt: at(30) })],
+      }),
+      NOW,
+    );
+
+    expect(view.byId.w1).toMatchObject({ isStale: false, isVerifying: true });
+    // In flight, not something the reader has to deal with.
+    expect(view.frontier[0]).toMatchObject({ kind: 'verifying', rank: 1 });
+    expect(view.needsYou).toBe(0);
+  });
+
+  it('gives up on a delivery the coordinator itself would no longer wait for', () => {
+    // Past the coordinator's settle grace the verify run really is stuck, and
+    // the honest reading flips back to lost.
+    const view = buildGoalGraphView(
+      snapshot({
+        deliveredAt: { w1: at(30) },
+        events: [event('w1', 'activated', 30)],
+        nodes: [node('w1', { status: 'active', taskId: 'task-1', updatedAt: at(30) })],
+      }),
+      NOW,
+    );
+
+    expect(view.byId.w1).toMatchObject({ isStale: true, isVerifying: false });
+  });
+
   it('keeps a task running when the run operation heartbeat is fresh despite a quiet node row', () => {
     // The node row only moves on observations / status changes; a long tool
     // call or the verify stage keeps the operation lease fresh while the row
