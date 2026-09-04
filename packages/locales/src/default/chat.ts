@@ -1878,6 +1878,10 @@ export default {
   'goalProcess.planning.description':
     'The coordinator is breaking the goal into executable tasks — they will appear here shortly.',
   'goalProcess.tag.needsDecision': 'Needs your decision',
+  'goalProcess.acceptance.accepted': 'Accepted',
+  'goalProcess.acceptance.delivered': 'Awaiting your call',
+  'goalProcess.acceptance.errored': 'Verification error',
+  'goalProcess.acceptance.rejected': 'Rejected',
   'goalProcess.tag.verifying': 'Verifying',
   'goalProcess.tag.lost': 'Lost',
   'goalProcess.tag.done': 'Done',

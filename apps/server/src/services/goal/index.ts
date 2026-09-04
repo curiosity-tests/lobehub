@@ -7,6 +7,7 @@ import type {
   GoalGraphNode,
   GoalGraphSnapshot,
   GoalItem,
+  GoalNodeAcceptance,
   GoalNodeKind,
   GoalNodeStatus,
   GoalStatus,
@@ -300,11 +301,44 @@ export class GoalService {
 
   graph = async (goalId: string) => {
     const graph = await this.requireGraph(goalId);
-    const [runHeartbeats, deliveredAt] = await Promise.all([
+    const [runHeartbeats, deliveredAt, acceptances] = await Promise.all([
       this.collectRunHeartbeats(graph),
       this.collectDeliveredAt(graph),
+      this.collectAcceptances(graph),
     ]);
-    return { ...graph, deliveredAt, runHeartbeats };
+    return { ...graph, acceptances, deliveredAt, runHeartbeats };
+  };
+
+  /**
+   * Verification state per task node.
+   *
+   * Every dispatched task already owns an Acceptance (`createResponsibleTask`
+   * creates one), but the goal surfaced only the criteria it would be judged
+   * against — never the judgment. A reader could see that a task finished and
+   * still have no idea whether it held up, which is the gap that made the page
+   * feel unverifiable.
+   */
+  private collectAcceptances = async (
+    graph: GoalGraphSnapshot,
+  ): Promise<Record<string, GoalNodeAcceptance> | undefined> => {
+    const taskNodes = graph.nodes.filter(
+      (node): node is GoalGraphNode & { taskId: string } => node.kind === 'task' && !!node.taskId,
+    );
+    if (taskNodes.length === 0) return undefined;
+
+    const nodeByTaskId = new Map(taskNodes.map((node) => [node.taskId, node.id]));
+    const rows = await this.acceptanceService.acceptanceModel.findBySubjects(
+      'task',
+      taskNodes.map((node) => node.taskId),
+    );
+
+    const result: Record<string, GoalNodeAcceptance> = {};
+    for (const row of rows) {
+      const nodeId = nodeByTaskId.get(row.subjectId);
+      if (!nodeId) continue;
+      result[nodeId] = { id: row.id, status: row.status };
+    }
+    return Object.keys(result).length > 0 ? result : undefined;
   };
 
   /**
