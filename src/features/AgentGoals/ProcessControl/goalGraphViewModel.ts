@@ -314,11 +314,18 @@ export const buildGoalGraphView = (
     // window is where the goal is most informative, and it lasted up to an hour
     // showing a failure-coloured "lost" badge.
     const delivered = deliveredAt?.[node.id];
+    // Two independent signals say a delivery is being judged: the coordinator's
+    // own settle window, and the acceptance row's status. They must not be read
+    // separately — a graph whose delivery timestamp had aged past the window
+    // while its acceptance still said `verifying` rendered a red "lost" badge
+    // next to a "verifying" chip on the same row, which cannot both be true.
+    const acceptanceVerifying =
+      acceptances?.[node.id]?.status === 'verifying' ||
+      acceptances?.[node.id]?.status === 'repairing';
     const isVerifying =
       node.kind === 'task' &&
       node.status === 'active' &&
-      !!delivered &&
-      now - delivered.getTime() <= VERIFY_SETTLE_GRACE_MS;
+      (acceptanceVerifying || (!!delivered && now - delivered.getTime() <= VERIFY_SETTLE_GRACE_MS));
 
     return {
       answers: supportsByFinding.get(node.id) ?? [],

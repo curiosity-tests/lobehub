@@ -191,6 +191,24 @@ describe('buildGoalGraphView', () => {
     expect(view.needsYou).toBe(0);
   });
 
+  it('never calls a node lost while its own acceptance says it is being judged', () => {
+    // The settle window and the acceptance row are two views of one fact. Read
+    // separately, an aged delivery timestamp put a red "lost" badge on the same
+    // row as a "verifying" chip — a contradiction the reader has no way to
+    // resolve.
+    const view = buildGoalGraphView(
+      snapshot({
+        acceptances: { w1: { id: 'acc-1', status: 'verifying' } },
+        deliveredAt: { w1: at(30) },
+        events: [event('w1', 'activated', 30)],
+        nodes: [node('w1', { status: 'active', taskId: 'task-1', updatedAt: at(30) })],
+      }),
+      NOW,
+    );
+
+    expect(view.byId.w1).toMatchObject({ isStale: false, isVerifying: true });
+  });
+
   it('gives up on a delivery the coordinator itself would no longer wait for', () => {
     // Past the coordinator's settle grace the verify run really is stuck, and
     // the honest reading flips back to lost.
