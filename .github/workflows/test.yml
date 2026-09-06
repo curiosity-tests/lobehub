@@ -31,7 +31,7 @@ concurrency:
 env:
   # The one variable that separates the arms: on baseline, action-checkout
   # skips its Set up Chalk step entirely.
-  CHALK_ON: ${{ github.event_name == 'workflow_dispatch' && inputs.leg != 'baseline' }}
+  CHALK_ON: ${{ inputs.leg == 'instrumented' }}
 
 run-name: "Test CI ${{ inputs.leg || 'push' }} ${{ inputs.racecar_run }}"
 
@@ -75,8 +75,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -117,7 +117,7 @@ jobs:
           COMMON_ARGS="--git-service github"
 
           # PR args setup
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
+          if [ "${{ 'push' }}" == "pull_request" ]; then
             COMMON_ARGS="$COMMON_ARGS --pr ${{ github.event.pull_request.number }}"
             COMMON_ARGS="$COMMON_ARGS --sha ${{ github.event.pull_request.head.sha }}"
             # Fork PR needs username:branch format for tokenless upload
@@ -183,8 +183,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -231,8 +231,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -291,8 +291,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -350,8 +350,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -398,8 +398,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
@@ -464,8 +464,8 @@ jobs:
 
       - name: Checkout
         env:
-          REF_SHA: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
-          REPOSITORY: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
+          REF_SHA: ${{ 'push' == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+          REPOSITORY: ${{ 'push' == 'pull_request' && github.event.pull_request.head.repo.full_name || github.repository }}
         run: |
           git init .
           git remote add origin "https://github.com/${REPOSITORY}.git"
